@@ -20,8 +20,21 @@ services:
       retries: 5
     volumes:
       - pg_data:/var/lib/postgresql/data/
-  
-  stori:
-    
+
+  api:
+    image: stori:latest
+    container_name: service_stori
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./data:/data"
+    depends_on:
+      - postgres
+
+networks:
+  default:
+    name: "stori.dev"
+
 volumes:
   pg_data:
