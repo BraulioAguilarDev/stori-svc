@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"log"
+	"stori/config"
 	"stori/internal/report"
 	"stori/internal/transaction/repository"
 	"stori/pkg/reader"
@@ -36,10 +37,10 @@ func (t *transaction) AddHandler(handler Handler) {
 }
 
 func (t *transaction) Run() error {
-	log.Println("Reading csv file from data directory...")
+	log.Println("Reading csv file from /data directory...")
 
 	// TODO: read file from env or flag params
-	data, err := reader.ReadFile("data/txns.csv")
+	data, err := reader.ReadFile(config.Config.CSV_FILE)
 	if err != nil {
 		log.Printf("ReadFile method failed with error: %v", err)
 		return err
