@@ -10,6 +10,7 @@ import (
 type Handler interface {
 	ProcessAndSave([]reader.Data) error
 	GetSummary() (*report.Summary, error)
+	SendSummary(*report.Summary) error
 }
 
 type TransactionModule struct{}
@@ -40,20 +41,28 @@ func (t *transaction) Run() error {
 	// TODO: read file from env or flag params
 	data, err := reader.ReadFile("data/txns.csv")
 	if err != nil {
+		log.Printf("ReadFile method failed with error: %v", err)
 		return err
 	}
 
 	// Sanitizing data and saving in the db
 	if err := t.Handler.ProcessAndSave(data); err != nil {
+		log.Printf("ProcessAndSave method failed with error: %v", err)
 		return err
 	}
 
 	summary, err := t.Handler.GetSummary()
 	if err != nil {
+		log.Printf("GetSummary method failed with error: %v", err)
 		return err
 	}
 
-	log.Println(summary)
-	// TODO: send email
+	if err := t.Handler.SendSummary(summary); err != nil {
+		log.Printf("SendSummary method failed with error: %v", err)
+		return err
+	}
+
+	log.Println("Email sent successfully")
+
 	return nil
 }

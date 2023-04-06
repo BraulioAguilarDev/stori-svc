@@ -3,27 +3,25 @@ package config
 import (
 	"log"
 
-	"github.com/spf13/viper"
+	"github.com/jinzhu/configor"
 )
 
-type Settings struct {
-	DSN_DB string
+type Sngrid struct {
+	Key    string
+	Sender string
+	Name   string
 }
 
-var Config Settings
+type config struct {
+	DSN_DB    string `default:"postgres://postgres:postgres@localhost:5432/dbname?sslmode=disable" env:"DSN_DB"`
+	SG_KEY    string `default:"token" env:"SG_KEY"`
+	SG_SENDER string `default:"info@stori.com" env:"SG_SENDER"`
+}
+
+var Config config
 
 func init() {
-	viper.AutomaticEnv()
-	viper.BindEnv("DSN_DB")
-
-	viper.SetDefault("DSN_DB", "postgres://postgres:password@localhost:5432/stori_db?sslmode=disable")
-
-	if err := viper.Unmarshal(&Config); err != nil {
-		log.Panicf("Error unmarshalling configuration: %s", err)
-	}
-
-	log.Println("Parameters loaded are:")
-	for _, k := range viper.AllKeys() {
-		log.Printf("\t%s=%v\n", k, viper.Get(k))
+	if err := configor.Load(&Config); err != nil {
+		log.Fatal(err.Error())
 	}
 }

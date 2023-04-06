@@ -1,8 +1,8 @@
 package main
 
 import (
-	"stori/config"
 	"stori/internal/db"
+	"stori/internal/email"
 	"stori/internal/transaction"
 	"stori/internal/transaction/handler"
 	"stori/internal/transaction/repository"
@@ -29,12 +29,11 @@ func main() {
 
 	inject := inject.New()
 	inject.Install(
-		&db.PostgresModule{
-			URL: config.Config.DSN_DB,
-		},
+		&db.PostgresModule{},
 		&repository.RepositoryModule{},
 		&handler.TransactionModule{},
 		&transaction.TransactionModule{},
+		&email.EmailModule{},
 	)
 	inject.Call(app.Start)
 }

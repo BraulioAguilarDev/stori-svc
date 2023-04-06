@@ -28,5 +28,5 @@ CREATE TABLE IF NOT EXISTS transaction (
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE transaction;
-DROP TABLE bank_account;
+DROP TABLE account;
 -- +goose StatementEnd
