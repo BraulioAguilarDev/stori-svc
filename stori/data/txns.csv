@@ -1,5 +1,5 @@
-id,date,transaction,account_id,bank_name,number,currency
-1,2023-07-15,+60.5,1,banorte,11111111,mxn
-2,2023-07-28,-10.3,1,banorte,11111111,mxn
-3,2023-08-02,-20.46,1,banorte,11111111,mxn
-4,2023-08-13,+10,1,banorte,11111111,mxn
+id,date,transaction,bank_name,number,currency,account,email
+1,2023-07-15,+60.5,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2,2023-07-28,-10.3,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+3,2023-08-02,-20.46,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+4,2023-08-13,+10,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
