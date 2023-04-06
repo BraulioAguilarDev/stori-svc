@@ -64,7 +64,7 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 	for _, account := range accounts {
 		log.Printf("Saving %s bank...\n", account.BankName)
 		if err := h.Repo.CreateAccount(account); err != nil {
-			log.Printf("creating bank %s error: %v\n", account.BankName, err)
+			log.Printf("Creating account failed %s, error: %v\n", account.BankName, err)
 		}
 	}
 
