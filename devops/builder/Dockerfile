@@ -21,6 +21,7 @@ WORKDIR /go/src/
 
 COPY --from=builder /$NAME .
 COPY --from=builder /go/src/data /go/src/data
+COPY --from=builder /go/src/migrations /go/src/migrations
 
 EXPOSE 8080
 

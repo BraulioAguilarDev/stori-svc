@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 x-common-variables: &common-variables
   POSTGRES_DB: stori_db
@@ -6,12 +6,17 @@ x-common-variables: &common-variables
   POSTGRES_PASSWORD: postgres
   POSTGRES_PORT: 5432
 
+x-dsn-variables: &dsn-variables
+  DSN_DB: postgres://postgres:postgres@postgres_db_stori:5432/stori_db?sslmode=disable
+
 services:
   postgres:
     image: postgres:14.3-alpine
     container_name: postgres_db_stori
     ports:
       - "54320:5432"
+    expose:
+      - "54320"
     environment: *common-variables
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d stori_db" ]
@@ -27,8 +32,7 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-    volumes:
-      - "./data:/data"
+    environment: *dsn-variables
     depends_on:
       - postgres
 
