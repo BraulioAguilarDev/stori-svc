@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS account (
   "bank_name" VARCHAR NOT NULL,
   "number" INTEGER NOT NULL,
   "currency" VARCHAR NOT NULL,
+  "account_name" VARCHAR NOT NULL,
+  "account_email" VARCHAR NOT NULL,
   "create_ts" TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY(id)
 );
@@ -15,7 +17,6 @@ CREATE TABLE IF NOT EXISTS transaction (
   "date" TIMESTAMP NOT NULL,
   "debit_amount" NUMERIC(10,2) DEFAULT 0.0,
   "credit_amount" NUMERIC(10,2) DEFAULT 0.0,
-  "operation_number" INTEGER NOT NULL,
   "metadata" JSON,
   "create_ts" TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY(id),

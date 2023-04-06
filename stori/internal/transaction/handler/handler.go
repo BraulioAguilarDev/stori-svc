@@ -37,34 +37,6 @@ type transactionHandler struct {
 	Email email.Email
 }
 
-func (h *transactionHandler) GetSummary() (*report.Summary, error) {
-	balance, average, err := h.Repo.GetSummary()
-	if err != nil {
-		return nil, err
-	}
-
-	var txns []report.TransactionMonth
-	var total float64
-
-	for _, b := range balance {
-		numberByMon := (b.Credit + b.Debit)
-		txns = append(txns, report.TransactionMonth{
-			Month:  b.Month,
-			Number: numberByMon,
-		})
-		total += b.Subtotal
-	}
-
-	summary := &report.Summary{}
-	summary.Total = total
-	summary.Transactions = txns
-
-	summary.AverageCreditAmount = (average.Credit / average.NumberCredit)
-	summary.AverageDebitAmount = (average.Debit / average.NumberDebit)
-
-	return summary, nil
-}
-
 func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 	accounts := make(map[string]domain.Account)
 	for _, row := range data[1:] {
@@ -79,11 +51,13 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 		}
 
 		accounts[row.BankName] = domain.Account{
-			ID:       accountId.String(),
-			BankName: row.BankName,
-			Number:   number,
-			Currency: row.Currency,
-			CreateTs: time.Now(),
+			ID:           accountId.String(),
+			BankName:     row.BankName,
+			Number:       number,
+			Currency:     row.Currency,
+			AccountName:  row.AccountName,
+			AccountEmail: row.AccountEmail,
+			CreateTs:     time.Now(),
 		}
 	}
 
@@ -112,7 +86,6 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 			credit, _ = strconv.ParseFloat(t.Amount[1:], 64)
 		}
 
-		number, _ := strconv.Atoi(t.Number)
 		metadataJson, err := json.Marshal(t)
 		if err != nil {
 			panic(err)
@@ -130,14 +103,13 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 		}
 
 		transactions = append(transactions, domain.Transaction{
-			ID:              transactionID.String(),
-			AccountID:       bank,
-			Date:            date,
-			DebitAmount:     -debit,
-			CreditAmount:    credit,
-			OperationNumber: number,
-			Metadata:        metadataJson,
-			CreateTs:        time.Now(), // TODO: move to autoCreateTime
+			ID:           transactionID.String(),
+			AccountID:    bank,
+			Date:         date,
+			DebitAmount:  -debit,
+			CreditAmount: credit,
+			Metadata:     metadataJson,
+			CreateTs:     time.Now(), // TODO: use autoCreateTime
 		})
 	}
 
@@ -151,17 +123,46 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 	return nil
 }
 
-func (h *transactionHandler) SendSummary(r *report.Summary) error {
-	r.Email = "brauliodev@gmail.com"
-	r.Name = "Braulio"
+func (h *transactionHandler) GetSummary() (*report.Summary, error) {
+	accountSummary, err := h.Repo.GetSummary()
+	if err != nil {
+		return nil, err
+	}
 
+	var txns []report.TransactionMonth
+	var total float64
+
+	for _, b := range accountSummary.Balances {
+		numberByMon := (b.Credit + b.Debit)
+		txns = append(txns, report.TransactionMonth{
+			Month:  b.Month,
+			Number: numberByMon,
+		})
+		total += b.Subtotal
+	}
+
+	summary := &report.Summary{}
+	// account info
+	summary.Email = accountSummary.Email
+	summary.Name = accountSummary.Name
+	// totals
+	summary.Total = total
+	summary.Transactions = txns
+
+	summary.AverageCreditAmount = (accountSummary.Average.Credit / accountSummary.Average.NumberCredit)
+	summary.AverageDebitAmount = (accountSummary.Average.Debit / accountSummary.Average.NumberDebit)
+
+	return summary, nil
+}
+
+func (h *transactionHandler) SendSummary(r *report.Summary) error {
 	tmp := template.Must(template.ParseFiles("internal/email/template/summary.html"))
 	var body bytes.Buffer
 	if err := tmp.Execute(&body, r); err != nil {
 		return err
 	}
 
-	if err := h.Email.Send(r.Email, config.Config.SG_SENDER, "Summary", body.String()); err != nil {
+	if err := h.Email.Send(r.Email, config.Config.SG_SENDER, "Transactions Summary Report", body.String()); err != nil {
 		log.Printf("Sending email error %v", err)
 		return err
 	}

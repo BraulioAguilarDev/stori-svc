@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"stori/internal/domain"
 	"stori/internal/report"
 
@@ -23,7 +24,7 @@ type Transaction interface {
 
 	// Transaction model
 	CreateTransaction(data domain.Transaction) error
-	GetSummary() ([]report.Balance, *report.Average, error)
+	GetSummary() (*report.AccountSummary, error)
 }
 
 type repository struct {
@@ -34,7 +35,17 @@ func (r *repository) InjectDB(db *gorm.DB) {
 	r.db = db
 }
 
-func (r *repository) GetSummary() ([]report.Balance, *report.Average, error) {
+func (r *repository) GetSummary() (*report.AccountSummary, error) {
+	// Get account info
+	var account domain.Account
+	if err := r.db.Last(&account).Error; err != nil {
+		return nil, err
+	}
+
+	if account.AccountEmail == "" {
+		return nil, errors.New("account not valid")
+	}
+
 	// Getting balance and count transactions by month
 	/*
 		month|debit|credit|subtotal|
@@ -53,7 +64,7 @@ func (r *repository) GetSummary() ([]report.Balance, *report.Average, error) {
 	`
 
 	if err := r.db.Raw(balanceNumbersQuery).Scan(&balance).Error; err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	// Average info
@@ -72,10 +83,15 @@ func (r *repository) GetSummary() ([]report.Balance, *report.Average, error) {
 		FROM transaction t`
 
 	if err := r.db.Raw(averageQuery).Scan(&average).Error; err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return balance, average, nil
+	return &report.AccountSummary{
+		Email:    account.AccountEmail,
+		Name:     account.AccountName,
+		Balances: balance,
+		Average:  *average,
+	}, nil
 }
 
 func (r *repository) GetAccountByName(bank string) (string, error) {

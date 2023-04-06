@@ -10,6 +10,12 @@ type Average struct {
 	Credit, Debit, NumberDebit, NumberCredit float64
 }
 
+type AccountSummary struct {
+	Name, Email string
+	Balances    []Balance
+	Average     Average
+}
+
 type TransactionMonth struct {
 	Month  string
 	Number int

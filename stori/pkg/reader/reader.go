@@ -7,13 +7,14 @@ import (
 )
 
 type Data struct {
-	ID        string
-	Date      string
-	Amount    string
-	AccountID string
-	BankName  string
-	Number    string
-	Currency  string
+	ID           string
+	Date         string
+	Amount       string
+	BankName     string
+	Number       string
+	Currency     string
+	AccountName  string
+	AccountEmail string
 }
 
 func ReadFile(filename string) ([]Data, error) {
@@ -35,15 +36,15 @@ func ReadFile(filename string) ([]Data, error) {
 			return nil, err
 		}
 
-		// TODO: cast from string to int,data,float
 		txns = append(txns, Data{
-			ID:        row[0],
-			Date:      row[1],
-			Amount:    row[2],
-			AccountID: row[3],
-			BankName:  row[4],
-			Number:    row[5],
-			Currency:  row[6],
+			ID:           row[0],
+			Date:         row[1],
+			Amount:       row[2],
+			BankName:     row[3],
+			Number:       row[4],
+			Currency:     row[5],
+			AccountName:  row[6],
+			AccountEmail: row[7],
 		})
 	}
 

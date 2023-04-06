@@ -6,14 +6,13 @@ import (
 )
 
 type Transaction struct {
-	ID              string    `gorm:"primaryKey"`
-	AccountID       string    `gorm:"not null"`
-	Date            time.Time `gorm:"not null"`
-	DebitAmount     float64
-	CreditAmount    float64
-	OperationNumber int             `gorm:"not null"`
-	Metadata        json.RawMessage `gorm:"not null"`
-	CreateTs        time.Time       `gorm:"autoCreateTime:milli"`
+	ID           string    `gorm:"primaryKey"`
+	AccountID    string    `gorm:"not null"`
+	Date         time.Time `gorm:"not null"`
+	DebitAmount  float64
+	CreditAmount float64
+	Metadata     json.RawMessage `gorm:"not null"`
+	CreateTs     time.Time       `gorm:"autoCreateTime:milli"`
 }
 
 func (a *Transaction) TableName() string {
