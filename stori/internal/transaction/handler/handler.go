@@ -1,9 +1,13 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
+	"html/template"
 	"log"
+	"stori/config"
 	"stori/internal/domain"
+	"stori/internal/email"
 	"stori/internal/report"
 	"stori/internal/transaction/repository"
 	"stori/pkg/reader"
@@ -15,19 +19,22 @@ import (
 
 type TransactionModule struct{}
 
-func (m *TransactionModule) ProvideTransactionModule(repo repository.Transaction) TransactionHandler {
+func (m *TransactionModule) ProvideTransactionModule(repo repository.Transaction, email email.Email) TransactionHandler {
 	return &transactionHandler{
-		Repo: repo,
+		Repo:  repo,
+		Email: email,
 	}
 }
 
 type TransactionHandler interface {
 	ProcessAndSave([]reader.Data) error
 	GetSummary() (*report.Summary, error)
+	SendSummary(*report.Summary) error
 }
 
 type transactionHandler struct {
-	Repo repository.Transaction
+	Repo  repository.Transaction
+	Email email.Email
 }
 
 func (h *transactionHandler) GetSummary() (*report.Summary, error) {
@@ -139,6 +146,24 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 			log.Printf("creating transaction error: %v", err)
 			continue
 		}
+	}
+
+	return nil
+}
+
+func (h *transactionHandler) SendSummary(r *report.Summary) error {
+	r.Email = "brauliodev@gmail.com"
+	r.Name = "Braulio"
+
+	tmp := template.Must(template.ParseFiles("internal/email/template/summary.html"))
+	var body bytes.Buffer
+	if err := tmp.Execute(&body, r); err != nil {
+		return err
+	}
+
+	if err := h.Email.Send(r.Email, config.Config.SG_SENDER, "Summary", body.String()); err != nil {
+		log.Printf("Sending email error %v", err)
+		return err
 	}
 
 	return nil

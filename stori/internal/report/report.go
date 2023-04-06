@@ -16,6 +16,8 @@ type TransactionMonth struct {
 }
 
 type Summary struct {
+	Name                                           string
+	Email                                          string
 	Total, AverageDebitAmount, AverageCreditAmount float64
 	Transactions                                   []TransactionMonth
 }
