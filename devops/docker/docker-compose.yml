@@ -8,6 +8,7 @@ x-common-variables: &common-variables
 
 x-dsn-variables: &dsn-variables
   DSN_DB: postgres://postgres:postgres@postgres_db_stori:5432/stori_db?sslmode=disable
+  SG_KEY: token-example
 
 services:
   postgres:
