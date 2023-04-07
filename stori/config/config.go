@@ -22,9 +22,9 @@ func init() {
 	viper.BindEnv("SG_SENDER")
 	viper.BindEnv("CSV_FILE")
 
-	viper.SetDefault("DSN_DB", "postgres://postgres:postgres@localhost:5432/stori?sslmode=disable")
-	viper.SetDefault("SG_KEY", "token")
-	viper.SetDefault("SG_SENDER", "dev@braulio.tech")
+	viper.SetDefault("DSN_DB", "postgres://postgres:postgres@localhost:5432/stori_db?sslmode=disable")
+	viper.SetDefault("SG_KEY", "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")
+	viper.SetDefault("SG_SENDER", "simoncositas@gmail.com")
 	viper.SetDefault("CSV_FILE", "data/txns.csv")
 
 	if err := viper.Unmarshal(&Config); err != nil {
