@@ -9,7 +9,7 @@ Sending the transactions summary by email
 - [Goose](https://pressly.github.io/goose/) library to manage the migrations.
 
 # Layout
-![Drag Racing](doc/assets/stori.png)
+![Drag Racing](doc/assets/layout.png)
 # Environment variables
 Read environment variables with [viper](github.com/spf13/viper).
 
@@ -41,7 +41,7 @@ $ make docker
 $ make dc-up
 
 # Print logs
-$ docker logs -f service_stori
+$ docker logs -f app.stori.dev
 ```
 
 # Evidence

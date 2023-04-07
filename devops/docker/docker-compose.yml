@@ -7,13 +7,13 @@ x-common-variables: &common-variables
   POSTGRES_PORT: 5432
 
 x-dsn-variables: &dsn-variables
-  DSN_DB: postgres://postgres:postgres@postgres_db_stori:5432/stori_db?sslmode=disable
+  DSN_DB: postgres://postgres:postgres@db.stori.dev:5432/stori_db?sslmode=disable
   SG_KEY: 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
 
 services:
   postgres:
     image: postgres:14.3-alpine
-    container_name: postgres_db_stori
+    container_name: db.stori.dev
     ports:
       - "54320:5432"
     expose:
@@ -29,7 +29,7 @@ services:
 
   api:
     image: stori:latest
-    container_name: service_stori
+    container_name: app.stori.dev
     restart: on-failure
     ports:
       - "8080:8080"
