@@ -37,7 +37,7 @@ $ git clone git@github.com:BraulioAguilarDev/stori-svc.git
 # Go to stori directory
 $ cd stori-svc/stori
 
-# Copy the .env file then replace all ## change me ##
+# Copy the .env file then replace all ## change me ## at /devops/docker/.env
 $ make env
 
 # Building docker image "stori:latest" with following command
