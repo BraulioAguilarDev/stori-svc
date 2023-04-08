@@ -1,5 +1,25 @@
-id,date,transaction,bank_name,number,currency,account,email
-1,2023-07-15,+60.5,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
-2,2023-07-28,-10.3,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
-3,2023-08-02,-20.46,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
-4,2023-08-13,+10,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+date,transaction,bank_name,number,currency,account,email
+2023-01-05,+60.5,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-01-08,-10.3,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-02-12,-20.46,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-02-13,+10,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-03-15,+80.5,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-03-16,-100.3,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-04-22,-202.46,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-04-23,+101,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-05-15,+620.5,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-05-18,-2500.33,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-06-22,-320.46,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-06-11,+710,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-07-05,+600.5,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-07-28,-150.8,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-08-07,-200.99,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-08-17,+1050.50,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-09-15,+500.00,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-09-02,-430.20,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-10-30,-499.46,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-10-16,+600,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-11-14,+777.99,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-11-23,-450.50,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-12-27,-999.99,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com
+2023-12-19,+3050,Billetera Global66,1234567890,mxn,Braulio,brauliodev@gmail.com

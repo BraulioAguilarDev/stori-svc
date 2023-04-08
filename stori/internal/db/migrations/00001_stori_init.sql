@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS account (
   "account_name" VARCHAR NOT NULL,
   "account_email" VARCHAR NOT NULL,
   "create_ts" TIMESTAMP NOT NULL DEFAULT NOW(),
-  PRIMARY KEY(id)
+  PRIMARY KEY(id),
+  UNIQUE(account_email, number)
 );
 
 CREATE TABLE IF NOT EXISTS transaction (

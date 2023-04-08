@@ -3,8 +3,10 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"html/template"
 	"log"
+	"math"
 	"stori/config"
 	"stori/internal/domain"
 	"stori/internal/email"
@@ -42,15 +44,19 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 	for _, row := range data[1:] {
 		number, err := strconv.Atoi(row.Number)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		accountId, err := uuid.NewRandom()
 		if err != nil {
-			panic(err)
+			return err
 		}
 
-		accounts[row.BankName] = domain.Account{
+		if len(row.AccountEmail) == 0 {
+			return errors.New("email is required")
+		}
+
+		accounts[row.AccountEmail] = domain.Account{
 			ID:           accountId.String(),
 			BankName:     row.BankName,
 			Number:       number,
@@ -62,19 +68,19 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 	}
 
 	for _, account := range accounts {
-		log.Printf("Saving %s bank...\n", account.BankName)
+		log.Printf("Saving account: %v\n", account)
 		if err := h.Repo.CreateAccount(account); err != nil {
-			log.Printf("Creating account failed %s, error: %v\n", account.BankName, err)
+			log.Printf("Creating account error: %s\n", account.AccountName)
 		}
 	}
 
 	var transactions []domain.Transaction
 	for _, t := range data[1:] {
 		log.Printf("Working the transaction: %v\n", t)
-		// Pase date
+		// Parsing date
 		date, err := time.Parse("2006-01-02", t.Date)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		// Check if is debit/credit
@@ -88,18 +94,18 @@ func (h *transactionHandler) ProcessAndSave(data []reader.Data) error {
 
 		metadataJson, err := json.Marshal(t)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		// Get bank from db
-		bank, err := h.Repo.GetAccountByName(t.BankName)
+		bank, err := h.Repo.GetAccountByEmail(t.AccountEmail)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		transactionID, err := uuid.NewRandom()
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		transactions = append(transactions, domain.Transaction{
@@ -146,11 +152,11 @@ func (h *transactionHandler) GetSummary() (*report.Summary, error) {
 	summary.Email = accountSummary.Email
 	summary.Name = accountSummary.Name
 	// totals
-	summary.Total = total
+	summary.Total = roundFloat(total, 2)
 	summary.Transactions = txns
 
-	summary.AverageCreditAmount = (accountSummary.Average.Credit / accountSummary.Average.NumberCredit)
-	summary.AverageDebitAmount = (accountSummary.Average.Debit / accountSummary.Average.NumberDebit)
+	summary.AverageCreditAmount = roundFloat((accountSummary.Average.Credit / accountSummary.Average.NumberCredit), 2)
+	summary.AverageDebitAmount = roundFloat((accountSummary.Average.Debit / accountSummary.Average.NumberDebit), 2)
 
 	return summary, nil
 }
@@ -168,4 +174,9 @@ func (h *transactionHandler) SendSummary(r *report.Summary) error {
 	}
 
 	return nil
+}
+
+func roundFloat(val float64, precision uint) float64 {
+	ratio := math.Pow(10, float64(precision))
+	return math.Round(val*ratio) / ratio
 }
