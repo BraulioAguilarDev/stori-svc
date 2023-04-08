@@ -48,8 +48,4 @@ $ docker logs -f app.stori.dev
 
 Email info
 
-![Drag Racing](doc/assets/email-example.png)
-
-Logs info
-
-![Drag Racing](doc/assets/logs.png)
+![Drag Racing](doc/assets/email.png)
