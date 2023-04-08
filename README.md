@@ -10,15 +10,16 @@ Sending the transactions summary by email
 
 # Layout
 ![Drag Racing](doc/assets/layout.png)
+
 # Environment variables
-Read environment variables with [viper](github.com/spf13/viper).
+Read environment variables with [viper](github.com/spf13/viper). Now, are located at `devops/docker/.env`.
 
-* `DSN_DB`    string  // Gorm source string. Example: `postgres://postgres:postgres@localhost:5432/dbname?sslmode=disable`
-* `SG_KEY`    string  // Api key for Sendgrid platform
-* `SG_SENDER` string  // Email address as Sender identity.
-* `CSV_FILE`  string  // CSV file path
-
-Note: `SG_KEY` and `SG_SENDER`  are available only for this challenge.
+| Variable  | Type  | Description  | Default  |
+|---|---|---|---|
+| DSN_DB | string | Gorm source string  | ## change me ## |
+| SG_KEY |  string | Api key for Sendgrid platform | ## change me ## |
+| SG_SENDER | string | Email address as Sender identity. | ## change me ## |
+| CSV_FILE | string | CSV file path | `data/txns.csv` |
 
 # Requirements
 
@@ -27,12 +28,17 @@ Note: `SG_KEY` and `SG_SENDER`  are available only for this challenge.
 
 # Run application using Docker
 
+**Note**: If you want to receive the email in your inbox please edit the `data/txns.csv` replacing the `account` and `email` in this case `Braulio` and `brauliodev@gmail.com` for what you want.
+
 ```shell
 # Clone repo
-$ git@github.com:BraulioAguilarDev/stori-svc.git
+$ git clone git@github.com:BraulioAguilarDev/stori-svc.git
 
 # Go to stori directory
-$ cd stori
+$ cd stori-svc/stori
+
+# Copy the .env file then replace all ## change me ##
+$ make env
 
 # Building docker image "stori:latest" with following command
 $ make docker
@@ -41,7 +47,10 @@ $ make docker
 $ make dc-up
 
 # Print logs
-$ docker logs -f app.stori.dev
+$ make logs
+
+# Remove all
+$ make dc-down
 ```
 
 # Evidence

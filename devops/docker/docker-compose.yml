@@ -1,14 +1,10 @@
 version: "3.8"
 
 x-common-variables: &common-variables
-  POSTGRES_DB: stori_db
+  POSTGRES_DB: stori
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_PORT: 5432
-
-x-dsn-variables: &dsn-variables
-  DSN_DB: postgres://postgres:postgres@db.stori.dev:5432/stori_db?sslmode=disable
-  SG_KEY: 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
 
 services:
   postgres:
@@ -20,20 +16,21 @@ services:
       - "54320"
     environment: *common-variables
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d stori_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d stori" ]
       interval: 10s
       timeout: 5s
       retries: 5
     volumes:
-      - pg_data:/var/lib/postgresql/data/
+      - pg_stori_data:/var/lib/postgresql/data/
 
   api:
     image: stori:latest
     container_name: app.stori.dev
     restart: on-failure
+    env_file:
+      - .env
     ports:
       - "8080:8080"
-    environment: *dsn-variables
     depends_on:
       - postgres
 
@@ -42,4 +39,4 @@ networks:
     name: "stori.dev"
 
 volumes:
-  pg_data:
+  pg_stori_data:
