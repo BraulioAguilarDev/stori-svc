@@ -16,8 +16,15 @@ type PostgresModule struct{}
 
 func (m *PostgresModule) ProvidePostgresDB() (*gorm.DB, error) {
 	dbPool, err := gorm.Open(postgres.Open(config.Config.DSN_DB), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
 
-	db, _ := dbPool.DB()
+	db, err := dbPool.DB()
+	if err != nil {
+		return nil, err
+	}
+
 	goose.SetDialect("postgres")
 	goose.SetBaseFS(fs)
 	if err := goose.Up(db, "migrations"); err != nil {

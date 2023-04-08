@@ -13,13 +13,13 @@ import (
 
 type Application struct{}
 
-func (app *Application) Start(db *gorm.DB, repo repository.Transaction,
-	handler handler.TransactionHandler, txns transaction.Transaction) {
+func (app *Application) Start(db *gorm.DB, repository repository.Transaction,
+	handler handler.TransactionHandler, transaction transaction.Transaction) {
 	// Config db instance and handlers
-	repo.InjectDB(db)
-	txns.AddHandler(handler)
+	repository.InjectDB(db)
+	transaction.AddHandler(handler)
 
-	if err := txns.Run(); err != nil {
+	if err := transaction.Run(); err != nil {
 		panic(err)
 	}
 }

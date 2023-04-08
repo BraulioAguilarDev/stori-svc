@@ -37,29 +37,28 @@ func (t *transaction) AddHandler(handler Handler) {
 }
 
 func (t *transaction) Run() error {
-	log.Println("Reading csv file from /data directory...")
+	log.Println("Reading csv file from data directory...")
 
-	// TODO: read file from env or flag params
 	data, err := reader.ReadFile(config.Config.CSV_FILE)
 	if err != nil {
-		log.Printf("ReadFile method failed with error: %v", err)
+		log.Printf("Reading file error: %v", err)
 		return err
 	}
 
 	// Sanitizing data and saving in the db
 	if err := t.Handler.ProcessAndSave(data); err != nil {
-		log.Printf("ProcessAndSave method failed with error: %v", err)
+		log.Printf("ProcessAndSave method failed, error: %v", err)
 		return err
 	}
 
 	summary, err := t.Handler.GetSummary()
 	if err != nil {
-		log.Printf("GetSummary method failed with error: %v", err)
+		log.Printf("GetSummary method failed, error: %v", err)
 		return err
 	}
 
 	if err := t.Handler.SendSummary(summary); err != nil {
-		log.Printf("SendSummary method failed with error: %v", err)
+		log.Printf("SendSummary method failed, error: %v", err)
 		return err
 	}
 

@@ -19,7 +19,7 @@ type Transaction interface {
 	InjectDB(db *gorm.DB)
 
 	// Account model
-	GetAccountByName(string) (string, error)
+	GetAccountByEmail(string) (string, error)
 	CreateAccount(data domain.Account) error
 
 	// Transaction model
@@ -50,8 +50,8 @@ func (r *repository) GetSummary() (*report.AccountSummary, error) {
 	/*
 		month|debit|credit|subtotal|
 		---+-----+------+--------+
-		08 |    1|     1|  -10.46|
-		07 |    1|     1|   50.20|
+		aug |    1|     1|  -10.46|
+		jul |    1|     1|   50.20|
 	*/
 
 	var balance []report.Balance
@@ -94,9 +94,9 @@ func (r *repository) GetSummary() (*report.AccountSummary, error) {
 	}, nil
 }
 
-func (r *repository) GetAccountByName(bank string) (string, error) {
+func (r *repository) GetAccountByEmail(email string) (string, error) {
 	var account domain.Account
-	if err := r.db.First(&account, "bank_name", bank).Error; err != nil {
+	if err := r.db.First(&account, "account_email", email).Error; err != nil {
 		return "", err
 	}
 
