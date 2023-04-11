@@ -16,7 +16,7 @@ type Handler interface {
 
 type TransactionModule struct{}
 
-func (m *TransactionModule) ProvideRabbitClientModule(repo repository.Transaction) Transaction {
+func (m *TransactionModule) ProvideTransactionModule(repo repository.Transaction) Transaction {
 	return &transaction{
 		Repo: repo,
 	}
